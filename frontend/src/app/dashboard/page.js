@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/common/Navbar';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { 
   Users, CalendarDays, Activity, Search, Sparkles, UserPlus, 
@@ -95,10 +96,25 @@ export default function Dashboard() {
     }
   };
 
-  // Trigger Patient List Fetch (Every keystroke trigger re-renders parent! - Performance bug)
+  // Debounced Patient List Fetch — prevents API call on every keystroke
+  const searchTimerRef = useRef(null);
   useEffect(() => {
     if (user.role === 'RECEPTIONIST' || user.role === 'ADMIN') {
-      fetchPatients(1);
+      // Clear any existing debounce timer
+      if (searchTimerRef.current) {
+        clearTimeout(searchTimerRef.current);
+      }
+      // Set a new debounce timer (400ms delay)
+      searchTimerRef.current = setTimeout(() => {
+        fetchPatients(1);
+      }, 400);
+
+      // Cleanup on unmount or before next effect run
+      return () => {
+        if (searchTimerRef.current) {
+          clearTimeout(searchTimerRef.current);
+        }
+      };
     }
   }, [patientSearch, patientGender]);
 
@@ -894,7 +910,9 @@ export default function Dashboard() {
                       without optional chaining! If medicalHistory is null (which is the case for Batman, Clark Kent, etc.),
                       this code throws: "Cannot read properties of null (reading 'toUpperCase')" and crashes the app! */}
                   <p className="text-slate-700 dark:text-slate-300 leading-5 text-sm font-semibold">
-                    {selectedPatientHistory.medicalHistory.toUpperCase()}
+                    {selectedPatientHistory.medicalHistory
+                      ? selectedPatientHistory.medicalHistory.toUpperCase()
+                      : 'No medical history on record for this patient.'}
                   </p>
                 </div>
 
