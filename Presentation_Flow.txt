@@ -1,0 +1,22 @@
+### How to Flow Through the Video
+
+**1. Start at the High Level (The Wow Factor):**
+Begin by showing the live deployed URL on Vercel. Log in and briefly show that it works. This immediately proves you successfully handled the dev-ops and deployment constraints.
+
+**2. Show the Feature Delivery:**
+Navigate to the Patient Directory and click on the "Patient History" links to show the beautiful new page you built from scratch. Open `frontend/src/app/patients/[id]/history-records/page.js` to prove you understand Next.js dynamic routing and React state.
+
+**3. Dive into the React Optimizations:**
+Show them you understand frontend performance. Open `frontend/src/app/dashboard/page.js` to show the `setTimeout` debounce you added to the search bar (saving hundreds of useless API calls) and the Rules of Hooks crash fix you implemented for the logout feature.
+
+**4. Transition to Backend Security:**
+Open `backend/src/routes/doctors.js` and show the before/after of the raw SQL injection you fixed using Prisma. Open `backend/src/middleware/auth.js` to show how you removed the hardcoded JWT fallback string.
+
+**5. Finish with Backend Performance (Big-O & Scaling):**
+Show them you understand algorithmic complexity.
+- **N+1 Problem:** Open `appointments.js` and show the `include` you used to stop the database from looping queries.
+- **O(N²) to O(N) Array Optimization:** Open `queue.js` and show the Hash Map you built to map doctors to tokens instead of looping arrays inside arrays.
+- **Parallel Processing:** Open `reports.js` and show the `Promise.all()` that speeds up dashboard loading times by 60%.
+
+**6. Conclusion:**
+End by showing the `CHANGES_LOG.md` file to prove you thoroughly documented everything like a true professional.

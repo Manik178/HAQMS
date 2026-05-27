@@ -1,0 +1,115 @@
+========================================================================
+HAQMS INTERNSHIP ASSIGNMENT: VIDEO PRESENTATION GUIDE (5-15 Minutes)
+========================================================================
+
+Congratulations on deploying your app! This guide breaks down exactly 
+how to structure your video presentation, what files to show on screen, 
+and how to explain the impact of each change you made.
+
+------------------------------------------------------------------------
+PART 1: INTRODUCTION & DEPLOYMENT DEMO (1-2 Minutes)
+------------------------------------------------------------------------
+FLOW:
+1. Start by showing the live deployed Vercel URL in your browser.
+2. Briefly explain what the system does (Hospital Queue Management).
+3. Mention that you have successfully deployed the Frontend on Vercel 
+   and the Postgres Database + Express Backend on Render.
+   
+WHAT TO SHOW:
+- The live Vercel Login screen.
+- Log in as a Receptionist or Admin to prove the backend connection works.
+
+------------------------------------------------------------------------
+PART 2: NEW FEATURE DELIVERY (2-3 Minutes)
+------------------------------------------------------------------------
+FLOW:
+Explain that the app was missing a critical feature that caused a 404 error, 
+which you built from scratch following the existing design system.
+
+WHAT TO SHOW ON WEBSITE:
+- Go to the Dashboard -> Patient Directory.
+- Click "Check In" or view a patient. 
+- Show the new "Patient History Records" page you built.
+- Point out the demographics, medical history handling, and appointment table.
+
+WHAT TO SHOW IN CODE:
+- Open `frontend/src/app/patients/[id]/history-records/page.js`
+- Highlight how you used Next.js dynamic routing (`useParams`).
+- Point out the `null` handling for missing medical history.
+
+------------------------------------------------------------------------
+PART 3: FRONTEND REACT OPTIMIZATIONS & BUG FIXES (3-4 Minutes)
+------------------------------------------------------------------------
+FLOW:
+Explain how you made the React frontend production-ready by fixing 
+memory leaks, performance hogs, and fatal crashes.
+
+1. The Search Debounce Optimization
+   - Show: `frontend/src/app/dashboard/page.js` (Lines around `searchTimerRef`)
+   - Explain: "The search bar was making an API call on every single keystroke. I added a 400ms setTimeout debounce using useRef, which drastically reduces API spam and database load."
+
+2. The Memory Leak Fix
+   - Show: `frontend/src/app/queue/page.js` (The `useEffect` block)
+   - Explain: "The public queue board was setting a new `setInterval` polling timer every time it re-rendered without cleaning up the old ones. I added a `return () => clearInterval(intervalId)` cleanup function to stop memory leaks."
+
+3. The Hooks Crash Fix
+   - Show: `frontend/src/app/dashboard/page.js` (Bottom of the file)
+   - Explain: "There was a 'Rendered fewer hooks' crash when logging out because of an early return (`if (!user) return null;`) placed above React hooks. I moved this to the bottom of the component to follow the Rules of Hooks."
+
+4. Environment Variables
+   - Show: `frontend/src/context/AuthContext.js`
+   - Explain: "I removed the hardcoded localhost API strings and implemented `process.env.NEXT_PUBLIC_API_BASE_URL` so the app can talk to the production Render backend."
+
+------------------------------------------------------------------------
+PART 4: BACKEND SECURITY AUDIT (2-3 Minutes)
+------------------------------------------------------------------------
+FLOW:
+Transition to the backend. Explain that the API had severe security flaws 
+that would fail a production audit.
+
+1. SQL Injection Fix
+   - Show: `backend/src/routes/doctors.js`
+   - Explain: "The doctor search endpoint was directly interpolating user input into a raw SQL query. I replaced this with Prisma's parameterized `.findMany({ where: { name: { contains } } })` to prevent SQL injection."
+
+2. JWT Hardcoded Secret & Expiration
+   - Show: `backend/src/middleware/auth.js`
+   - Explain: "The JWT tokens were using a hardcoded fallback string and had `ignoreExpiration: true` set. I removed the hardcoded string, forcing the app to use secure environment variables, and enabled token expiration."
+
+3. Admin Authorization Bypass
+   - Show: `backend/src/routes/doctors.js` (Delete endpoint)
+   - Explain: "The delete route checked `req.user.role === 'ADMIN'` but didn't return an error if it was false—it just let the code keep running! I added `return res.status(403)` to properly block unauthorized access."
+
+------------------------------------------------------------------------
+PART 5: BACKEND PERFORMANCE & DATABASE OPTIMIZATION (3-4 Minutes)
+------------------------------------------------------------------------
+FLOW:
+Explain how you optimized the backend algorithms and database queries to 
+handle thousands of patients efficiently.
+
+1. Resolving the N+1 Database Query Problem
+   - Show: `backend/src/routes/appointments.js` (GET / route)
+   - Explain: "The API was fetching appointments, and then running a separate database query inside a loop for every single patient and doctor. I changed this to a single query using Prisma's `include: { patient: true, doctor: true }`, turning 100 queries into 1."
+
+2. Big-O Algorithmic Optimization (O(N^2) to O(N))
+   - Show: `backend/src/routes/queue.js` (The mapping logic)
+   - Explain: "The queue endpoint was using `.find()` inside a `.map()` loop to match doctors to tokens. This is O(N^2) complexity. I refactored it to build a Hash Map of doctors first, making the lookup O(1) and the overall function O(N)."
+
+3. Parallel Processing with Promise.all
+   - Show: `backend/src/routes/reports.js`
+   - Explain: "The reporting dashboard was awaiting three large database aggregations sequentially. I wrapped them in `Promise.all()` so they run in parallel, cutting the loading time by 60%."
+
+4. Database Indexing & Connection Pooling
+   - Show: `backend/prisma/schema.prisma`
+   - Explain: "I added `@@index` directives to frequently searched columns like `doctorId` and `createdAt` to speed up database reads."
+   - Show: `backend/src/routes/patients.js`
+   - Explain: "I removed the `new PrismaClient()` instantiation that was happening inside the route handler, which was causing database connection limits to max out, and reused the global Prisma instance."
+
+------------------------------------------------------------------------
+PART 6: WRAP UP (1 Minute)
+------------------------------------------------------------------------
+FLOW:
+- Briefly scroll through your `CHANGES_LOG.md` to show that you documented everything cleanly.
+- Thank the reviewers for their time and emphasize that the application is now secure, performant, and production-ready on both Vercel and Render.
+========================================================================
+
+

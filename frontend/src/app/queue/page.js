@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/common/Navbar';
 import { Activity, Bell, Monitor, RefreshCw, AlertCircle } from 'lucide-react';
+import ThemeToggle from '@/components/common/ThemeToggle';
 
 export default function QueueMonitor() {
   const [tokens, setTokens] = useState([]);
@@ -90,6 +91,7 @@ export default function QueueMonitor() {
           </div>
           
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-500/15 text-teal-600 dark:text-teal-400 text-xs font-bold uppercase tracking-wide border border-teal-500/20">
               <RefreshCw className="h-3.5 w-3.5 animate-spin" />
               Auto Refreshing

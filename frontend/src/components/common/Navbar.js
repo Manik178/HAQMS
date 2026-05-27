@@ -3,6 +3,7 @@
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import { Activity, LogOut, LayoutDashboard, MonitorPlay, Shield } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -46,6 +47,7 @@ export default function Navbar() {
             </span>
           </div>
 
+          <ThemeToggle />
           <button
             onClick={logout}
             className="p-2 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-500 hover:text-white transition-all duration-300 focus:outline-none"

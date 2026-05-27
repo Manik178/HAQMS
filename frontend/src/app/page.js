@@ -2,10 +2,14 @@
 
 import Link from 'next/link';
 import { Activity, ShieldAlert, MonitorPlay, Users, CalendarDays, ArrowRight } from 'lucide-react';
+import ThemeToggle from '@/components/common/ThemeToggle';
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen justify-between py-12 px-6 lg:px-8">
+    <div className="flex flex-col min-h-screen justify-between py-12 px-6 lg:px-8 relative">
+      <div className="absolute top-6 right-6">
+        <ThemeToggle />
+      </div>
       <div className="max-w-4xl mx-auto w-full text-center mt-12 sm:mt-20">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 text-teal-600 dark:text-teal-400 text-sm font-medium mb-6 animate-pulse">
           <Activity className="h-4 w-4" />

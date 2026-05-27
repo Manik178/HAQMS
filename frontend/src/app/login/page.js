@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import { User, Lock, Activity, Eye, EyeOff } from 'lucide-react';
+import ThemeToggle from '@/components/common/ThemeToggle';
 
 export default function Login() {
   const { login, error: authError, loading } = useAuth();
@@ -43,7 +44,10 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen justify-center items-center py-12 px-6 lg:px-8">
+    <div className="flex flex-col min-h-screen justify-center items-center py-12 px-6 lg:px-8 relative">
+      <div className="absolute top-6 right-6">
+        <ThemeToggle />
+      </div>
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <Link href="/" className="inline-flex items-center gap-2 text-teal-600 dark:text-teal-400 font-extrabold text-3xl">
           <Activity className="h-8 w-8 animate-pulse" />
