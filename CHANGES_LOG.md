@@ -174,3 +174,17 @@ This document tracks all changes made across all 5 challenges.
   - **Loading/error states:** Uses the existing `pulse-loader` animation and styled error banners
   - **Design consistency:** Uses the same `glass` card style, teal accent colors, Tailwind CSS classes, and Lucide icons as all other pages
   - Result: **"View Diagnostic Reports Details" link now works** — renders full patient clinical record instead of 404
+
+---
+
+## Extra Bug Fixes 🐛
+
+### 1. Live Queue Public Access
+- **File:** `backend/src/routes/queue.js`
+- **Issue:** The `GET /api/queue` route was protected by the `authenticate` middleware, causing the public live monitor board (`/queue`) to throw a 401 Unauthorized "Failed to retrieve active token queue" error since it operates without a user token.
+- **Fix:** Removed the `authenticate` middleware from `router.get('/')` so the queue data can be fetched publicly.
+
+### 2. Dashboard Hooks Crash on Logout
+- **File:** `frontend/src/app/dashboard/page.js`
+- **Issue:** Clicking "Exit / Logout" set `user` to `null`. An early return (`if (!user) return null;`) at line 25 caused React to throw a fatal "Rendered fewer hooks than expected" error because it skipped dozens of `useState`/`useEffect` hooks that follow it.
+- **Fix:** Moved the early return to the bottom of the component (just before the JSX `return`) and safely updated the initial `useState` hook to use optional chaining (`user?.role`), satisfying the Rules of Hooks.

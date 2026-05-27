@@ -19,6 +19,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  doctor    Doctor?
+
   @@index([role])
 }
 
@@ -50,9 +52,11 @@ model Doctor {
   availableTo     String
   consultationFee Float
   experience      Int
+  userId          String?  @unique
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
+  user         User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
   appointments Appointment[]
   queueTokens  QueueToken[]
 
