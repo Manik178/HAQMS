@@ -32,3 +32,6 @@ Thumbs.db
 # Prisma SQLite (if ever used)
 backend/prisma/*.db
 backend/prisma/*.db-journal
+
+Presentation_Flow.txt
+Presentation_guide.txt
